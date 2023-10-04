@@ -36,7 +36,6 @@ def start_game
       puts "Load Falure, exiting"
       exit
     end
-  end
 
   when 'exit'
     puts 'Exiting game....'
@@ -50,24 +49,30 @@ def start_game
 end
 
 class Game
-
+  include GameLogic
   def initialize
     # load dictionary and filter to array of 5-12 character words
-    @dictionary = GameLogic.load_dictionary
-    @correct_answer = GameLogic.generate_new_word(@dictionary)
+    @dictionary = load_dictionary
+    @correct_answer = generate_new_word(@dictionary)
     @tries_left = 10
-    @game_board = Array.new(@correct_answer.length, nil) # @ current status of guessed/unguessed space i.e. W _  _  _ E _
+    @game_board = Array.new(@correct_answer.length, '_') # @ current status of guessed/unguessed space i.e. W _  _  _ E _
     @wrong_guesses = []
+    p @correct_answer
+    p @game_board
   end
 
   def game_loop
-    puts "entering game"
+    puts "Starting Game"
     puts "the current right answer is \"#{@correct_answer}\" meaning the dictionary is loaded!"
-    exit
-
+    
     loop do
-      # Game loop logic here
-      break if game_over? # Add your exit condition
+      
+      draw_turn(@game_board, @tries_left, @wrong_guesses)
+      puts "Enter your selection"
+      input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
+      check_move(input, @game_board, @wrong_guesses, @tries_left, @correct_answer)
+      
+      break if @tries_left.zero? || @game_board.join('') == @correct_answer
     end
 
     # Display game result and perform cleanup
