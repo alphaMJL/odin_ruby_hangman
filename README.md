@@ -3,10 +3,10 @@ text based hangman game in ruby
 
 This project demonstrates: 
 
-OOP design principles
-Loading dictionary from a file and manipulating the data
-Saving a game to a file
-Loading a game from a file
+OOP design principles  
+Loading dictionary from a file and manipulating the data  
+Saving a game to a file  
+Loading a game from a file  
 
 
 Assignment

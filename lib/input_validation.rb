@@ -17,7 +17,7 @@ module InputValidation
   def self.enter_move(input, fails, correct)
         current_input = input.to_s.downcase
     loop do
-      if current_input.match(/^[a-zA-Z]$/) && (!fails.include?(current_input) && !correct.include?(current_input))
+      if (current_input.match(/^[a-zA-Z]$/) && (!fails.include?(current_input) && !correct.include?(current_input))) || 'save'
         return current_input
       else
         puts "Invaild entry, Please enter an un-guessed letter to continue"

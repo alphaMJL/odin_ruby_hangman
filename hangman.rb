@@ -1,6 +1,66 @@
 require_relative 'lib/game_logic'
 require_relative 'lib/input_validation'
-require_relative 'lib/save_and_load'
+
+module SaveAndLoad
+  def save_game(filename)
+    # Save game logic here
+    true
+  end
+
+  def load_game
+    # Load game logic here
+  end
+end
+
+class Game
+  include GameLogic
+  include SaveAndLoad
+  def initialize
+    #@game = game
+    # load dictionary and filter to array of 5-12 character words
+    @dictionary = load_dictionary
+    @correct_answer = generate_new_word(@dictionary)
+    @tries_left = 10
+    @game_board = Array.new(@correct_answer.length, '_') # @ current status of guessed/unguessed space i.e. W _  _  _ E _
+    @wrong_guesses = []
+  end
+
+  def game_loop
+    puts "Starting Game"
+    puts "the current right answer is \"#{@correct_answer}\" meaning the dictionary is loaded!"
+    
+    loop do
+      draw_turn(@game_board, @tries_left, @wrong_guesses)
+      puts "Enter your selection or type SAVE to save game."
+      input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
+      if input == "save"
+        filename = #validate file name
+        save = save_game(filename)
+        if save
+          puts ''
+          puts '***************Save complete***************'
+          puts ''
+          redo
+        else
+          "Save error"
+        end
+      end
+      check_move(input, @game_board, @correct_answer)
+      break if @tries_left.zero? || @game_board.join('') == @correct_answer
+    end
+
+    # Display game result and perform cleanup
+    puts "end game state reached"
+  end
+
+  private
+
+  def game_over?
+    # Determine whether the game should end
+    # This method can check for win, loss, or user exit conditions
+    # Return true to end the game loop
+  end
+end
 
 def start_screen
   opening = <<-OPENING
@@ -21,12 +81,11 @@ def select_mode
   InputValidation.opening_inputs(gets.chomp)
 end
 
-def start_game
+def start_game(game)
   start_screen
   selection = select_mode
   case selection
   when 'start'
-    game = Game.new
     game.game_loop
   when 'load'
     game = #call load method to load game class
@@ -48,45 +107,6 @@ def start_game
   end
 end
 
-class Game
-  include GameLogic
-  def initialize
-    # load dictionary and filter to array of 5-12 character words
-    @dictionary = load_dictionary
-    @correct_answer = generate_new_word(@dictionary)
-    @tries_left = 10
-    @game_board = Array.new(@correct_answer.length, '_') # @ current status of guessed/unguessed space i.e. W _  _  _ E _
-    @wrong_guesses = []
-  end
-
-  def game_loop
-    puts "Starting Game"
-    puts "the current right answer is \"#{@correct_answer}\" meaning the dictionary is loaded!"
-    
-    loop do
-      
-      draw_turn(@game_board, @tries_left, @wrong_guesses)
-      puts "Enter your selection"
-      input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
-      check_move(input, @game_board, @correct_answer)
-      
-      break if @tries_left.zero? || @game_board.join('') == @correct_answer
-    end
-
-    # Display game result and perform cleanup
-    puts "end game state reached"
-  end
-
-  private
-
-  def game_over?
-    # Determine whether the game should end
-    # This method can check for win, loss, or user exit conditions
-    # Return true to end the game loop
-  end
-end
-
 # Start the game
-# start screen
-
-start_game
+game = Game.new
+start_game(game)
