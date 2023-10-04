@@ -57,8 +57,6 @@ class Game
     @tries_left = 10
     @game_board = Array.new(@correct_answer.length, '_') # @ current status of guessed/unguessed space i.e. W _  _  _ E _
     @wrong_guesses = []
-    p @correct_answer
-    p @game_board
   end
 
   def game_loop
@@ -70,12 +68,13 @@ class Game
       draw_turn(@game_board, @tries_left, @wrong_guesses)
       puts "Enter your selection"
       input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
-      check_move(input, @game_board, @wrong_guesses, @tries_left, @correct_answer)
+      check_move(input, @game_board, @correct_answer)
       
       break if @tries_left.zero? || @game_board.join('') == @correct_answer
     end
 
     # Display game result and perform cleanup
+    puts "end game state reached"
   end
 
   private

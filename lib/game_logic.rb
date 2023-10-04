@@ -25,15 +25,22 @@ module GameLogic
     puts output
   end
 
-  def check_move(input, board, guessed, tries, answer)
-    #if input is in answer
-      #update board to include at the same index as in answer
-    #else 
-      #push to guessed array
-      #tries -=1
-
-
-    
-  end
+  def check_move(input, board, answer)
+    #puts "answer variable is #{answer}" #TEST
+    if answer.include?(input)
+      answer.chars.each_with_index do |item, index|
+        #puts "item #{item}" #TEST
+        #puts "index #{index}" #TEST
+        #puts "input #{input}" #TEST
+        if item == input
+          @game_board[index] = item
+        end
+      end
+    else
+      @wrong_guesses.push(input)
+      @tries_left -= 1
+    end
+  end  
+  
     
 end

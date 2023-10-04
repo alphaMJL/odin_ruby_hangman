@@ -5,7 +5,7 @@ module InputValidation
     acceptable_inputs = %w[start exit load]
     current_input = input.to_s.downcase
     loop do
-      if current_input.match(/(#{acceptable_inputs.join('|')})/)
+      if current_input.match(/^(#{acceptable_inputs.join('|')})$/)
         return current_input
       else
         puts "Invaild entry, Please enter one of the following to continue, #{acceptable_inputs.join(" ").upcase}:"
