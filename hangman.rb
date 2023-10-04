@@ -2,13 +2,25 @@ require_relative 'lib/game_logic'
 require_relative 'lib/input_validation'
 
 module SaveAndLoad
-  def save_game(filename)
-    # Save game logic here
-    true
+
+  def save_game(filename, game_class)
+    serialized_data = Marshal.dump(game_class)
+    file_path = "save/#{filename}"
+    Dir.mkdir("save") unless Dir.exist?("save")
+    File.open(file_path, 'wb') do |file|
+      file.write(serialized_data)
+    end
   end
 
-  def load_game
-    # Load game logic here
+  def load_game(filename)
+    file_path = "save/#{filename}"
+
+    if File.exist?(file_path)
+      serialized_data = File.read(file_path)
+      Marshal.load(serialized_data) # load and return the game object
+    else
+      nil
+    end
   end
 end
 
@@ -35,7 +47,7 @@ class Game
       input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
       if input == "save"
         filename = #validate file name
-        save = save_game(filename)
+        save = save_game("test", self)
         if save
           puts ''
           puts '***************Save complete***************'
@@ -82,13 +94,15 @@ def select_mode
 end
 
 def start_game(game)
+  include SaveAndLoad
   start_screen
   selection = select_mode
   case selection
   when 'start'
     game.game_loop
   when 'load'
-    game = #call load method to load game class
+    puts "Loading game"
+    game = SaveAndLoad.load_game('test')
     if game
       game.game_loop
     else
