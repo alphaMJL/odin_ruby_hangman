@@ -1,7 +1,6 @@
 module InputValidation
 
   def self.opening_inputs(input)
-
     acceptable_inputs = %w[start exit load]
     current_input = input.to_s.downcase
     loop do

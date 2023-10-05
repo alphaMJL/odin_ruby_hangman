@@ -9,10 +9,12 @@ Saving a game to a file
 Loading a game from a file  
 
 
-Things that could be a nice touch, but are outside of the scope of what I am trying to do here.
+Things that could be a nice touch, but I need to keep moving forward and not over design these simple exercises.  
 Wish List:   
-Manage save games - delete from inside the game
-Checking to see if save game file exists and warning about overwrite.
+Manage save games - delete from inside the game  
+Checking to see if save game file exists and warning about overwrite.  
+play again? Currently game plays one round.  
+*Not using a global variable for the array containing save file names.  
 
 
 Assignment

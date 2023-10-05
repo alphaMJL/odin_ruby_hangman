@@ -132,11 +132,9 @@ def start_game(game)
       puts 'LOAD FAILURE EXITING'
       exit
     end
-
   when 'exit'
     puts 'Exiting game....'
     exit
-
   else
     puts 'SELECTION ERROR EXITING'
     exit

@@ -19,7 +19,7 @@ module GameLogic
     Remaining tries: #{tries.to_s}
 
     Incorrect letters: #{guessed.join(" ")}
-    
+
     OUTPUT
     puts output
   end
@@ -35,7 +35,5 @@ module GameLogic
       @wrong_guesses.push(input)
       @tries_left -= 1
     end
-  end  
-  
-    
+  end
 end
