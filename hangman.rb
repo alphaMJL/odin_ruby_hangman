@@ -33,7 +33,8 @@ class Game
     @dictionary = load_dictionary
     @correct_answer = generate_new_word(@dictionary)
     @tries_left = 10
-    @game_board = Array.new(@correct_answer.length, '_') # @ current status of guessed/unguessed space i.e. W _  _  _ E _
+    @game_board = Array.new(@correct_answer.length) { '_' } # @ current status of guessed/unguessed space i.e. W _  _  _ E _
+    p @game_board
     @wrong_guesses = []
   end
 
@@ -46,17 +47,19 @@ class Game
       puts "Enter your selection or type SAVE to save game."
       input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
       if input == "save"
-        filename = #validate file name
-        save = save_game("test", self)
+        puts 'Enter a file name, 3-8 characters, without spaces. May contain dashes and underscores.'
+        filename = InputValidation.save_filename(gets.chomp)
+        save = save_game(filename, self)
         if save
           puts ''
           puts '***************Save complete***************'
           puts ''
-          redo
         else
           "Save error"
         end
+        redo
       end
+      
       check_move(input, @game_board, @correct_answer)
       break if @tries_left.zero? || @game_board.join('') == @correct_answer
     end
@@ -79,7 +82,7 @@ def start_screen
   Welcome to Hangman. In this game you will get a random word
   of 5-12 characters. You will start with 10 guesses. You must
   uncover the word before your guesses run out. A correct guess
-  will not consume a guess. 
+  will not consume a guess.
 
   Type 'start' to start a new game.
   Type 'load' to load a saved game.

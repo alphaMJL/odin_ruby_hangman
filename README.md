@@ -9,6 +9,12 @@ Saving a game to a file
 Loading a game from a file  
 
 
+Things that could be a nice touch, but are outside of the scope of what I am trying to do here.
+Wish List:   
+Manage save games - delete from inside the game
+Checking to see if save game file exists and warning about overwrite.
+
+
 Assignment
 You will be building a simple command line Hangman game where one player plays against the computer, but a bit more advanced. If you’re unfamiliar with how Hangman works, see Wikipedia.
 
