@@ -15,11 +15,13 @@ module SaveAndLoad
   def load_game(filename)
     file_path = "save/#{filename}"
 
-    if File.exist?(file_path)
-      serialized_data = File.read(file_path)
-      Marshal.load(serialized_data) # load and return the game object
-    else
-      nil
+    serialized_data = File.read(file_path)
+    begin
+    Marshal.load(serialized_data) # load and return the game object
+    rescue => e
+      puts "Load Failed due to ERROR: #{e}"
+      puts "Exiting game..."
+      exit
     end
   end
 end
@@ -34,8 +36,14 @@ class Game
     @correct_answer = generate_new_word(@dictionary)
     @tries_left = 10
     @game_board = Array.new(@correct_answer.length) { '_' } # @ current status of guessed/unguessed space i.e. W _  _  _ E _
-    p @game_board
     @wrong_guesses = []
+  end
+  def reset_game
+    @correct_answer = generate_new_word(@dictionary)
+    @tries_left = 10
+    @game_board = Array.new(@correct_answer.length) { '_' }
+    @wrong_guesses = []
+    start_game(self)
   end
 
   def game_loop
@@ -63,18 +71,20 @@ class Game
       check_move(input, @game_board, @correct_answer)
       break if @tries_left.zero? || @game_board.join('') == @correct_answer
     end
-
     # Display game result and perform cleanup
-    puts "end game state reached"
+    if @tries_left.zero?
+      puts "GAME OVER! You ran out of turns. The correct answer was #{@correct_answer}"
+      puts 'Thank you for playing! Exiting...'
+    elsif @game_board.join('') == @correct_answer
+      puts "Congratulations!, The correct answer was #{@correct_answer}"
+      puts 'Thank you for playing! Exiting...'
+      exit
+    else
+      puts 'how did we get here. The game ended but we dont know why'
+      exit
+    end
   end
-
-  private
-
-  def game_over?
-    # Determine whether the game should end
-    # This method can check for win, loss, or user exit conditions
-    # Return true to end the game loop
-  end
+  
 end
 
 def start_screen
@@ -91,25 +101,44 @@ def start_screen
   OPENING
   puts opening
 end
-
+# save, load, exit
 def select_mode
   InputValidation.opening_inputs(gets.chomp)
 end
 
 def start_game(game)
   include SaveAndLoad
+
+  $filenames = []
+  def read_saves
+    # Specify the relative directory path
+    directory_path = 'save'
+    # Use Dir.entries to get an array of filenames in the directory, reject . and ..
+    $filenames = Dir.entries(directory_path).reject { |entry| entry =~ /^\.{1,2}$/ }
+    puts $filenames
+  end
+  def load_input
+    InputValidation.load_filename(gets.chomp)
+  end
+
   start_screen
   selection = select_mode
   case selection
   when 'start'
     game.game_loop
   when 'load'
+    puts "* * *"
+    puts 'Saves:'
+    read_saves
+    puts "* * *"
+    puts "Type in a game name to load."
+
+    game = SaveAndLoad.load_game(load_input)
     puts "Loading game"
-    game = SaveAndLoad.load_game('test')
     if game
       game.game_loop
     else
-      puts "Load Falure, exiting"
+      puts 'LOAD FAILURE EXITING'
       exit
     end
 

@@ -28,12 +28,29 @@ module InputValidation
 
   def self.save_filename(input)
 
-    current_input = input.to_s.downcase
+    current_input = input.to_s
     loop do
       if current_input.match(/^^[a-zA-Z0-9\-_]{3,8}$/)
         return current_input
       else
         puts 'Enter a valid filename, 3-8 characters with no spaces. May contain dashes and underscores.'
+        current_input = gets.chomp
+      end
+    end
+  end
+
+  def self.load_filename(input)
+    
+    current_input = input
+    loop do
+      if $filenames.include?(current_input)
+        return current_input
+      else 
+        puts '*** No save found ***'
+        puts ''
+        puts $filenames
+        puts ''
+        puts "Enter a valid filename"
         current_input = gets.chomp
       end
     end
