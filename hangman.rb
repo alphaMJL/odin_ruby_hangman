@@ -2,11 +2,10 @@ require_relative 'lib/game_logic'
 require_relative 'lib/input_validation'
 
 module SaveAndLoad
-
   def save_game(filename, game_class)
     serialized_data = Marshal.dump(game_class)
     file_path = "save/#{filename}"
-    Dir.mkdir("save") unless Dir.exist?("save")
+    Dir.mkdir('save') unless Dir.exist?('save')
     File.open(file_path, 'wb') do |file|
       file.write(serialized_data)
     end
@@ -20,7 +19,7 @@ module SaveAndLoad
     Marshal.load(serialized_data) # load and return the game object
     rescue => e
       puts "Load Failed due to ERROR: #{e}"
-      puts "Exiting game..."
+      puts 'Exiting game...'
       exit
     end
   end
@@ -38,23 +37,15 @@ class Game
     @game_board = Array.new(@correct_answer.length) { '_' } # @ current status of guessed/unguessed space i.e. W _  _  _ E _
     @wrong_guesses = []
   end
-  def reset_game
-    @correct_answer = generate_new_word(@dictionary)
-    @tries_left = 10
-    @game_board = Array.new(@correct_answer.length) { '_' }
-    @wrong_guesses = []
-    start_game(self)
-  end
-
+  
   def game_loop
-    puts "Starting Game"
-    puts "the current right answer is \"#{@correct_answer}\" meaning the dictionary is loaded!"
-    
+    puts 'Starting Game'
+    # puts "the current right answer is \"#{@correct_answer}\" meaning the dictionary is loaded!"
     loop do
       draw_turn(@game_board, @tries_left, @wrong_guesses)
-      puts "Enter your selection or type SAVE to save game."
+      puts 'Enter your selection or type SAVE to save game.'
       input = InputValidation.enter_move(gets.chomp, @wrong_guesses, @game_board)
-      if input == "save"
+      if input == 'save'
         puts 'Enter a file name, 3-8 characters, without spaces. May contain dashes and underscores.'
         filename = InputValidation.save_filename(gets.chomp)
         save = save_game(filename, self)
@@ -63,11 +54,10 @@ class Game
           puts '***************Save complete***************'
           puts ''
         else
-          "Save error"
+          'Save error'
         end
         redo
       end
-      
       check_move(input, @game_board, @correct_answer)
       break if @tries_left.zero? || @game_board.join('') == @correct_answer
     end
@@ -84,7 +74,6 @@ class Game
       exit
     end
   end
-  
 end
 
 def start_screen
@@ -101,6 +90,7 @@ def start_screen
   OPENING
   puts opening
 end
+
 # save, load, exit
 def select_mode
   InputValidation.opening_inputs(gets.chomp)
@@ -117,6 +107,7 @@ def start_game(game)
     $filenames = Dir.entries(directory_path).reject { |entry| entry =~ /^\.{1,2}$/ }
     puts $filenames
   end
+
   def load_input
     InputValidation.load_filename(gets.chomp)
   end
@@ -127,14 +118,14 @@ def start_game(game)
   when 'start'
     game.game_loop
   when 'load'
-    puts "* * *"
+    puts '* * *'
     puts 'Saves:'
     read_saves
-    puts "* * *"
-    puts "Type in a game name to load."
+    puts '* * *'
+    puts 'Type in a game name to load.'
 
     game = SaveAndLoad.load_game(load_input)
-    puts "Loading game"
+    puts 'Loading game'
     if game
       game.game_loop
     else
@@ -149,7 +140,6 @@ def start_game(game)
   else
     puts 'SELECTION ERROR EXITING'
     exit
-    
   end
 end
 

@@ -15,9 +15,9 @@ module InputValidation
   end
 
   def self.enter_move(input, fails, correct)
-        current_input = input.to_s.downcase
+    current_input = input.to_s.downcase
     loop do
-      if (current_input.match(/^[a-zA-Z]$/) && (!fails.include?(current_input) && !correct.include?(current_input))) || 'save'
+      if (current_input.match(/^[a-zA-Z]$/) && (!fails.include?(current_input) && !correct.include?(current_input))) || current_input == 'save'
         return current_input
       else
         puts "Invaild entry, Please enter an un-guessed letter to continue"
@@ -27,7 +27,6 @@ module InputValidation
   end
 
   def self.save_filename(input)
-
     current_input = input.to_s
     loop do
       if current_input.match(/^^[a-zA-Z0-9\-_]{3,8}$/)
@@ -40,12 +39,11 @@ module InputValidation
   end
 
   def self.load_filename(input)
-    
     current_input = input
     loop do
       if $filenames.include?(current_input)
         return current_input
-      else 
+      else
         puts '*** No save found ***'
         puts ''
         puts $filenames
@@ -55,6 +53,4 @@ module InputValidation
       end
     end
   end
-
-
 end
